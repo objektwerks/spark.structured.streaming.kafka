@@ -12,14 +12,14 @@ class KafkaSparkStructuredStreamingTest extends FunSuite {
     import KeyValue._
     sparkSession
       .readStream
-      .option("basePath", "./data")
+      .option("basePath", "./data/keyvalue")
       .schema(keyValueStructType)
-      .json("./data")
+      .json("./data/keyvalue")
       .as[KeyValue]
       .writeStream
       .foreach(keyValueForeachWriter)
-      .start()
-      .awaitTermination()
+      .start
+      .awaitTermination
 
 /*    sparkSession
       .readStream
