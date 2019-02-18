@@ -8,7 +8,9 @@ libraryDependencies ++= {
     "org.apache.kafka" %% "kafka" % "2.1.0",
     "org.apache.spark" %% "spark-core" % sparkVersion,
     "org.apache.spark" %% "spark-streaming" % sparkVersion,
-    "ch.qos.logback" % "logback-classic" % "1.2.3",
+    "org.apache.spark" %% "spark-sql" % sparkVersion,
+    "org.apache.spark" %% "spark-sql-kafka-0-10" % sparkVersion,
     "org.scalatest" %% "scalatest" % "3.0.5" % Test
   )
 }
+dependencyOverrides += "com.fasterxml.jackson.core" % "jackson-databind" % "2.9.8"
