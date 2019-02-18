@@ -1,6 +1,7 @@
 package streaming
 
 import org.scalatest.FunSuite
+import streaming.KeyValue._
 import streaming.SparkInstance._
 import streaming.SparkInstance.sparkSession.implicits._
 
@@ -8,8 +9,7 @@ class KafkaSparkStructuredStreamingTest extends FunSuite {
   val sourceTopic = "source-topic"
   val sinkTopic = "sink-topic"
 
-  test("source > sink") {
-    import KeyValue._
+  test("json") {
     sparkSession
       .readStream
       .option("basePath", "./data/keyvalue")
@@ -20,8 +20,10 @@ class KafkaSparkStructuredStreamingTest extends FunSuite {
       .foreach(keyValueForeachWriter)
       .start
       .awaitTermination
+  }
 
-/*    sparkSession
+  test("source > sink") {
+    sparkSession
       .readStream
       .option("basePath", "./data")
       .schema(keyValueSchema)
@@ -33,7 +35,7 @@ class KafkaSparkStructuredStreamingTest extends FunSuite {
       .option("topic", sourceTopic)
       .option("checkpointLocation", "./target/cpdir")
       .start
-      .awaitTermination()
+      .awaitTermination
     sparkSession
       .readStream
       .format("kafka")
@@ -48,7 +50,7 @@ class KafkaSparkStructuredStreamingTest extends FunSuite {
       .option("topic", sinkTopic)
       .option("checkpointLocation", "./target/cpdir")
       .start
-      .awaitTermination()
+      .awaitTermination
     sparkSession
       .readStream
       .format("kafka")
@@ -60,6 +62,6 @@ class KafkaSparkStructuredStreamingTest extends FunSuite {
       .writeStream
       .format("console")
       .start
-      .awaitTermination()*/
+      .awaitTermination
   }
 }
