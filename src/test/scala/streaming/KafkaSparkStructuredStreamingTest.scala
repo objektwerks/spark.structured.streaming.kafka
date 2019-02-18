@@ -13,21 +13,21 @@ class KafkaSparkStructuredStreamingTest extends FunSuite {
     sparkSession
       .readStream
       .option("basePath", "./data/keyvalue")
-      .schema(keyValueStructType)
+      .schema(keyValueSchema)
       .json("./data/keyvalue")
       .as[KeyValue]
       .writeStream
       .foreach(keyValueForeachWriter)
       .start
-      .awaitTermination
+      .awaitTermination(3000L)
   }
 
   test("source > sink") {
     sparkSession
       .readStream
-      .option("basePath", "./data")
-      .schema(keyValueSchema)
-      .json("./data")
+      .option("basePath", "./data/keyvalue")
+      .schema(keyValueStructType)
+      .json("./data/keyvalue")
       .as[KeyValue]
       .writeStream
       .format("kafka")
@@ -35,11 +35,11 @@ class KafkaSparkStructuredStreamingTest extends FunSuite {
       .option("topic", sourceTopic)
       .option("checkpointLocation", "./target/cpdir")
       .start
-      .awaitTermination
+      .awaitTermination(3000L)
     sparkSession
       .readStream
       .format("kafka")
-      .schema(KeyValue.keyValueSchema)
+      .schema(keyValueStructType)
       .option("kafka.bootstrap.servers", "localhost:9092")
       .option("subscribe", sourceTopic)
       .load
@@ -50,18 +50,18 @@ class KafkaSparkStructuredStreamingTest extends FunSuite {
       .option("topic", sinkTopic)
       .option("checkpointLocation", "./target/cpdir")
       .start
-      .awaitTermination
+      .awaitTermination(3000L)
     sparkSession
       .readStream
       .format("kafka")
-      .schema(KeyValue.keyValueSchema)
+      .schema(keyValueStructType)
       .option("kafka.bootstrap.servers", "localhost:9092")
       .option("subscribe", sinkTopic)
       .load
       .as[KeyValue]
       .writeStream
-      .format("console")
+      .foreach(keyValueForeachWriter)
       .start
-      .awaitTermination
+      .awaitTermination(3000L)
   }
 }
