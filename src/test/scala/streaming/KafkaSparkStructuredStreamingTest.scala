@@ -1,11 +1,12 @@
 package streaming
 
 import org.scalatest.FunSuite
-import streaming.KeyValue._
-import streaming.SparkInstance._
-import streaming.SparkInstance.sparkSession.implicits._
 
 class KafkaSparkStructuredStreamingTest extends FunSuite {
+  import SparkInstance._
+  import sparkSession.implicits._
+  import streaming.KeyValue._
+
   val sourceTopic = "source-topic"
   val sinkTopic = "sink-topic"
 
