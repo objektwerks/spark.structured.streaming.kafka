@@ -7,6 +7,7 @@ class KafkaSparkStructuredStreamingTest extends FunSuite {
   import sparkSession.implicits._
   import streaming.KeyValue._
 
+  val (kafkaBootstrapServers, urls) = ("kafka.bootstrap.servers", "localhost:9092")
   val sourceTopic = "source-topic"
   val sinkTopic = "sink-topic"
 
@@ -32,7 +33,7 @@ class KafkaSparkStructuredStreamingTest extends FunSuite {
       .as[KeyValue]
       .writeStream
       .format("kafka")
-      .option("kafka.bootstrap.servers", "localhost:9092")
+      .option(kafkaBootstrapServers, urls)
       .option("topic", sourceTopic)
       .option("checkpointLocation", "./target/cpdir")
       .start
@@ -41,13 +42,13 @@ class KafkaSparkStructuredStreamingTest extends FunSuite {
       .readStream
       .format("kafka")
       .schema(keyValueStructType)
-      .option("kafka.bootstrap.servers", "localhost:9092")
+      .option(kafkaBootstrapServers, urls)
       .option("subscribe", sourceTopic)
       .load
       .as[KeyValue]
       .writeStream
       .format("kafka")
-      .option("kafka.bootstrap.servers", "localhost:9092")
+      .option(kafkaBootstrapServers, urls)
       .option("topic", sinkTopic)
       .option("checkpointLocation", "./target/cpdir")
       .start
@@ -56,7 +57,7 @@ class KafkaSparkStructuredStreamingTest extends FunSuite {
       .readStream
       .format("kafka")
       .schema(keyValueStructType)
-      .option("kafka.bootstrap.servers", "localhost:9092")
+      .option(kafkaBootstrapServers, urls)
       .option("subscribe", sinkTopic)
       .load
       .as[KeyValue]
