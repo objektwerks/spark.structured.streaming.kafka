@@ -31,7 +31,6 @@ class KafkaSparkStructuredStreamingTest extends FunSuite {
       .schema(keyValueStructType)
       .json("./data/keyvalue")
       .as[KeyValue]
-      .select("key", "value")
       .writeStream
       .format("kafka")
       .option(kafkaBootstrapServers, urls)
