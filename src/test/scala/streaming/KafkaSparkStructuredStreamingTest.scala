@@ -35,9 +35,10 @@ class KafkaSparkStructuredStreamingTest extends FunSuite {
       .format("kafka")
       .option(kafkaBootstrapServers, urls)
       .option("topic", sourceTopic)
-      .option("checkpointLocation", "./target/cpdir")
+      .option("checkpointLocation", "./target/source-topic")
       .start
       .awaitTermination(3000L)
+
     sparkSession
       .readStream
       .format("kafka")
@@ -50,9 +51,10 @@ class KafkaSparkStructuredStreamingTest extends FunSuite {
       .format("kafka")
       .option(kafkaBootstrapServers, urls)
       .option("topic", sinkTopic)
-      .option("checkpointLocation", "./target/cpdir")
+      .option("checkpointLocation", "./target/sink-topic")
       .start
       .awaitTermination(3000L)
+
     sparkSession
       .readStream
       .format("kafka")
