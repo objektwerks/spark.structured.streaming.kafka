@@ -30,7 +30,7 @@ class KafkaSparkStructuredStreamingTest extends FunSuite {
       .option("basePath", "./data/keyvalue")
       .schema(keyValueStructType)
       .json("./data/keyvalue")
-      .as[KeyValue]
+      .select("key", "value")
       .writeStream
       .format("kafka")
       .option(kafkaBootstrapServers, urls)
@@ -44,6 +44,7 @@ class KafkaSparkStructuredStreamingTest extends FunSuite {
       .format("kafka")
       .option(kafkaBootstrapServers, urls)
       .option("subscribe", sourceTopic)
+      .option("startingOffsets", "earliest")
       .load
       .selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)")
       .writeStream
@@ -59,8 +60,8 @@ class KafkaSparkStructuredStreamingTest extends FunSuite {
       .format("kafka")
       .option(kafkaBootstrapServers, urls)
       .option("subscribe", sinkTopic)
+      .option("startingOffsets", "earliest")
       .load
-      .selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)")
       .writeStream
       .format("console")
       .start
