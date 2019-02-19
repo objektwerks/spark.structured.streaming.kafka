@@ -30,12 +30,25 @@ class KafkaSparkStructuredStreamingTest extends FunSuite {
       .option("basePath", "./data/keyvalue")
       .schema(keyValueStructType)
       .json("./data/keyvalue")
+      .as[KeyValue]
       .select("key", "value")
       .writeStream
       .format("kafka")
       .option(kafkaBootstrapServers, urls)
       .option("topic", sourceTopic)
       .option("checkpointLocation", "./target/source-topic")
+      .start
+      .awaitTermination(3000L)
+
+    sparkSession
+      .readStream
+      .format("kafka")
+      .option(kafkaBootstrapServers, urls)
+      .option("subscribe", sourceTopic)
+      .option("startingOffsets", "earliest")
+      .load
+      .writeStream
+      .format("console")
       .start
       .awaitTermination(3000L)
 
@@ -60,7 +73,7 @@ class KafkaSparkStructuredStreamingTest extends FunSuite {
       .format("kafka")
       .option(kafkaBootstrapServers, urls)
       .option("subscribe", sinkTopic)
-      .option("startingOffsets", "earliest")
+      .option("startingOffsets", "latest")
       .load
       .writeStream
       .format("console")
