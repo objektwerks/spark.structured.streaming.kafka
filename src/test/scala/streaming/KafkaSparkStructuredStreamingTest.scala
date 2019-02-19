@@ -44,7 +44,6 @@ class KafkaSparkStructuredStreamingTest extends FunSuite {
       .format("kafka")
       .option(kafkaBootstrapServers, urls)
       .option("subscribe", sourceTopic)
-      .option("startingOffsets", "earliest")
       .load
       .writeStream
       .format("console")
@@ -56,7 +55,6 @@ class KafkaSparkStructuredStreamingTest extends FunSuite {
       .format("kafka")
       .option(kafkaBootstrapServers, urls)
       .option("subscribe", sourceTopic)
-      .option("startingOffsets", "earliest")
       .load
       .selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)")
       .writeStream
@@ -72,7 +70,6 @@ class KafkaSparkStructuredStreamingTest extends FunSuite {
       .format("kafka")
       .option(kafkaBootstrapServers, urls)
       .option("subscribe", sinkTopic)
-      .option("startingOffsets", "latest")
       .load
       .writeStream
       .format("console")
