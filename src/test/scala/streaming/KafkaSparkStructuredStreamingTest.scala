@@ -11,7 +11,7 @@ class KafkaSparkStructuredStreamingTest extends FunSuite {
   val sourceTopic = "source-topic"
   val sinkTopic = "sink-topic"
 
-  test("json") {
+  test("source") {
     sparkSession
       .readStream
       .option("basePath", "./data/keyvalue")
