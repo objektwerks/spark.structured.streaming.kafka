@@ -42,11 +42,10 @@ class KafkaSparkStructuredStreamingTest extends FunSuite {
     sparkSession
       .readStream
       .format("kafka")
-      .schema(keyValueStructType)
       .option(kafkaBootstrapServers, urls)
       .option("subscribe", sourceTopic)
       .load
-      .as[KeyValue]
+      .selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)")
       .writeStream
       .format("kafka")
       .option(kafkaBootstrapServers, urls)
@@ -58,13 +57,12 @@ class KafkaSparkStructuredStreamingTest extends FunSuite {
     sparkSession
       .readStream
       .format("kafka")
-      .schema(keyValueStructType)
       .option(kafkaBootstrapServers, urls)
       .option("subscribe", sinkTopic)
       .load
-      .as[KeyValue]
+      .selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)")
       .writeStream
-      .foreach(keyValueForeachWriter)
+      .format("console")
       .start
       .awaitTermination(3000L)
   }
