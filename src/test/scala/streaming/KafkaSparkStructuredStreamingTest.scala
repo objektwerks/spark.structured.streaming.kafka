@@ -11,7 +11,7 @@ class KafkaSparkStructuredStreamingTest extends FunSuite {
   val sourceTopic = "source-topic"
   val sinkTopic = "sink-topic"
 
-  test("source") {
+  test("verify json") {
     sparkSession
       .readStream
       .option("basePath", "./data/keyvalue")
@@ -24,13 +24,13 @@ class KafkaSparkStructuredStreamingTest extends FunSuite {
       .awaitTermination(3000L)
   }
 
-  test("source > sink") {
+  test("read json > write source topic") {
     sparkSession
       .readStream
       .option("basePath", "./data/keyvalue")
       .schema(keyValueStructType)
       .json("./data/keyvalue")
-      .as[KeyValue]
+      .selectExpr("CAST(key AS STRING) AS key", "to_json(struct(*)) AS value")
       .writeStream
       .format("kafka")
       .option(kafkaBootstrapServers, urls)
@@ -38,7 +38,9 @@ class KafkaSparkStructuredStreamingTest extends FunSuite {
       .option("checkpointLocation", "./target/source-topic")
       .start
       .awaitTermination(3000L)
+  }
 
+  test("verify source topic") {
     sparkSession
       .readStream
       .format("kafka")
@@ -49,14 +51,16 @@ class KafkaSparkStructuredStreamingTest extends FunSuite {
       .format("console")
       .start
       .awaitTermination(3000L)
+  }
 
+  test("read source topic > write sink topic") {
     sparkSession
       .readStream
       .format("kafka")
       .option(kafkaBootstrapServers, urls)
       .option("subscribe", sourceTopic)
       .load
-      .selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)")
+      .selectExpr("CAST(key AS STRING) AS key", "to_json(struct(*)) AS value")
       .writeStream
       .format("kafka")
       .option(kafkaBootstrapServers, urls)
@@ -64,7 +68,9 @@ class KafkaSparkStructuredStreamingTest extends FunSuite {
       .option("checkpointLocation", "./target/sink-topic")
       .start
       .awaitTermination(3000L)
+  }
 
+  test("verify sink topic") {
     sparkSession
       .readStream
       .format("kafka")
