@@ -1,30 +1,32 @@
 package streaming
 
-import org.scalatest.FunSuite
+import org.apache.spark.sql.streaming.OutputMode
+import org.scalatest.{BeforeAndAfterAll, FunSuite}
 
-class KafkaSparkStructuredStreamingTest extends FunSuite {
-  import SparkInstance._
-  import sparkSession.implicits._
-  import streaming.KeyValue._
+import SparkInstance._
+import streaming.KeyValue._
 
+class KafkaSparkStructuredStreamingTest extends FunSuite with BeforeAndAfterAll {
   val (kafkaBootstrapServers, urls) = ("kafka.bootstrap.servers", "localhost:9092")
   val sourceTopic = "source-topic"
   val sinkTopic = "sink-topic"
+  val query = sparkSession
+    .readStream
+    .format("kafka")
+    .option(kafkaBootstrapServers, urls)
+    .option("subscribe", s"$sourceTopic,$sinkTopic")
+    .load
+    .writeStream
+    .outputMode(OutputMode.Append)
+    .format("console")
+    .start
 
-  test("verify json") {
-    sparkSession
-      .readStream
-      .option("basePath", "./data/keyvalue")
-      .schema(keyValueSchema)
-      .json("./data/keyvalue")
-      .as[KeyValue]
-      .writeStream
-      .foreach(keyValueForeachWriter)
-      .start
-      .awaitTermination(3000L)
+  override protected def afterAll(): Unit = {
+    query.awaitTermination(3000L)
+    ()
   }
 
-  test("read json > write source topic") {
+  test("json > source topic") {
     sparkSession
       .readStream
       .option("basePath", "./data/keyvalue")
@@ -40,20 +42,7 @@ class KafkaSparkStructuredStreamingTest extends FunSuite {
       .awaitTermination(3000L)
   }
 
-  test("verify source topic") {
-    sparkSession
-      .readStream
-      .format("kafka")
-      .option(kafkaBootstrapServers, urls)
-      .option("subscribe", sourceTopic)
-      .load
-      .writeStream
-      .format("console")
-      .start
-      .awaitTermination(3000L)
-  }
-
-  test("read source topic > write sink topic") {
+  test("source topic > sink topic") {
     sparkSession
       .readStream
       .format("kafka")
@@ -66,19 +55,6 @@ class KafkaSparkStructuredStreamingTest extends FunSuite {
       .option(kafkaBootstrapServers, urls)
       .option("topic", sinkTopic)
       .option("checkpointLocation", "./target/sink-topic")
-      .start
-      .awaitTermination(3000L)
-  }
-
-  test("verify sink topic") {
-    sparkSession
-      .readStream
-      .format("kafka")
-      .option(kafkaBootstrapServers, urls)
-      .option("subscribe", sinkTopic)
-      .load
-      .writeStream
-      .format("console")
       .start
       .awaitTermination(3000L)
   }
