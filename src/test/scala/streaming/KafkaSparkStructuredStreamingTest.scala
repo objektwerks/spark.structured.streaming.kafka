@@ -10,7 +10,7 @@ class KafkaSparkStructuredStreamingTest extends FunSuite with BeforeAndAfterAll 
   val (kafkaBootstrapServers, urls) = ("kafka.bootstrap.servers", "localhost:9092")
   val sourceTopic = "source-topic"
   val sinkTopic = "sink-topic"
-  val query = sparkSession
+  val consoleQuery = sparkSession
     .readStream
     .format("kafka")
     .option(kafkaBootstrapServers, urls)
@@ -23,7 +23,7 @@ class KafkaSparkStructuredStreamingTest extends FunSuite with BeforeAndAfterAll 
     .start
 
   override protected def afterAll(): Unit = {
-    query.awaitTermination(9000L)
+    consoleQuery.awaitTermination(9000L)
     ()
   }
 
