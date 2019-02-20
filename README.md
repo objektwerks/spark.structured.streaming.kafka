@@ -39,3 +39,4 @@ Kafka
 * kafka-consumer-groups --bootstrap-server localhost:9092 --list
 * kafka-consumer-groups --bootstrap-server localhost:9092 --describe --group objektwerks-group
 * kafka-console-consumer --bootstrap-server localhost:9092 --topic source-topic
+* kafka-run-class kafka.tools.GetOffsetShell --broker-list localhost:9092 --topic source-topic
