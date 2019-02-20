@@ -44,6 +44,8 @@ class KafkaSparkStructuredStreamingTest extends FunSuite with BeforeAndAfterAll 
   }
 
   test("source topic > sink topic") {
+    import org.apache.spark.sql.functions._
+
     sparkSession
       .readStream
       .format("kafka")
@@ -51,6 +53,7 @@ class KafkaSparkStructuredStreamingTest extends FunSuite with BeforeAndAfterAll 
       .option("subscribe", sourceTopic)
       .load
       .selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)")
+      .withColumn("value", upper(col("value")))
       .writeStream
       .format("kafka")
       .option(kafkaBootstrapServers, urls)
