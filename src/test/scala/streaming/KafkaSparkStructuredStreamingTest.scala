@@ -16,13 +16,14 @@ class KafkaSparkStructuredStreamingTest extends FunSuite with BeforeAndAfterAll 
     .option(kafkaBootstrapServers, urls)
     .option("subscribe", s"$sourceTopic,$sinkTopic")
     .load
+    .selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)", "CAST(topic AS STRING)")
     .writeStream
     .outputMode(OutputMode.Append)
     .format("console")
     .start
 
   override protected def afterAll(): Unit = {
-    query.awaitTermination(3000L)
+    query.awaitTermination(9000L)
     ()
   }
 
@@ -32,7 +33,7 @@ class KafkaSparkStructuredStreamingTest extends FunSuite with BeforeAndAfterAll 
       .option("basePath", "./data/keyvalue")
       .schema(keyValueStructType)
       .json("./data/keyvalue")
-      .selectExpr("CAST(key AS STRING) AS key", "to_json(struct(*)) AS value")
+      .selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)")
       .writeStream
       .format("kafka")
       .option(kafkaBootstrapServers, urls)
@@ -49,7 +50,7 @@ class KafkaSparkStructuredStreamingTest extends FunSuite with BeforeAndAfterAll 
       .option(kafkaBootstrapServers, urls)
       .option("subscribe", sourceTopic)
       .load
-      .selectExpr("CAST(key AS STRING) AS key", "to_json(struct(*)) AS value")
+      .selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)")
       .writeStream
       .format("kafka")
       .option(kafkaBootstrapServers, urls)
