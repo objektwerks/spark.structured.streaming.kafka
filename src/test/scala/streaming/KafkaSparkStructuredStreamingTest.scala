@@ -23,7 +23,7 @@ class KafkaSparkStructuredStreamingTest extends FunSuite with BeforeAndAfterAll 
     .start
 
   override protected def afterAll(): Unit = {
-    consoleQuery.awaitTermination(9000L)
+    consoleQuery.awaitTermination(6000L)
     ()
   }
 
