@@ -32,11 +32,12 @@ Test
 ----
 1. sbt clean test
 
+Run
+---
+1. sbt clean compile run **or** sbt run
+
 Kafka
 -----
 * kafka-topics --zookeeper localhost:2181 --list
-* kafka-topics --zookeeper localhost:2181 --delete --topic kv
-* kafka-consumer-groups --bootstrap-server localhost:9092 --list
-* kafka-consumer-groups --bootstrap-server localhost:9092 --describe --group objektwerks-group
-* kafka-console-consumer --bootstrap-server localhost:9092 --topic source-topic
+* kafka-topics --zookeeper localhost:2181 --delete --topic source-topic
 * kafka-run-class kafka.tools.GetOffsetShell --broker-list localhost:9092 --topic source-topic
