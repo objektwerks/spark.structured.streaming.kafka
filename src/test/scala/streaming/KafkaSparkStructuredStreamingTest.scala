@@ -4,7 +4,7 @@ import org.apache.spark.sql.streaming.OutputMode
 import org.scalatest.{BeforeAndAfterAll, FunSuite}
 
 import SparkInstance._
-import streaming.KeyValue._
+import KeyValue._
 
 class KafkaSparkStructuredStreamingTest extends FunSuite with BeforeAndAfterAll {
   val (kafkaBootstrapServers, urls) = ("kafka.bootstrap.servers", "localhost:9092")
