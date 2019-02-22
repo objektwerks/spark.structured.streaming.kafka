@@ -1,10 +1,13 @@
 package streaming
 
 import org.apache.spark.sql.streaming.OutputMode
-import streaming.KeyValue.keyValueStructType
+import org.apache.spark.sql.types.{StringType, StructType}
 import streaming.SparkInstance.sparkSession
 
 object StreamingApp extends App {
+  val keyValueStructType = new StructType()
+    .add(name = "key", dataType = StringType, nullable = false)
+    .add(name = "value", dataType = StringType, nullable = false)
   val (kafkaBootstrapServers, urls) = ("kafka.bootstrap.servers", "localhost:9092")
   val sourceTopic = "source-topic"
   val sinkTopic = "sink-topic"
