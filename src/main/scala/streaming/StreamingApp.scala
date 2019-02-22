@@ -5,7 +5,7 @@ import org.apache.spark.sql.streaming.OutputMode
 import SparkInstance._
 import KeyValue._
 
-object KafkaSparkStructuredStreamingApp extends App {
+object StreamingApp extends App {
   val (kafkaBootstrapServers, urls) = ("kafka.bootstrap.servers", "localhost:9092")
   val sourceTopic = "source-topic"
   val sinkTopic = "sink-topic"
@@ -21,7 +21,7 @@ object KafkaSparkStructuredStreamingApp extends App {
     .format("console")
     .start
 
-  sparkSession
+  val jsonToSourceTopic = sparkSession
     .readStream
     .option("basePath", "./data/keyvalue")
     .schema(keyValueStructType)
@@ -33,11 +33,10 @@ object KafkaSparkStructuredStreamingApp extends App {
     .option("topic", sourceTopic)
     .option("checkpointLocation", "./target/source-topic")
     .start
-    .awaitTermination(3000L)
 
   import org.apache.spark.sql.functions._
 
-  sparkSession
+  val sourceTopicToSinkTopic = sparkSession
     .readStream
     .format("kafka")
     .option(kafkaBootstrapServers, urls)
@@ -51,10 +50,12 @@ object KafkaSparkStructuredStreamingApp extends App {
     .option("topic", sinkTopic)
     .option("checkpointLocation", "./target/sink-topic")
     .start
-    .awaitTermination(3000L)
 
   sys.addShutdownHook {
     println("Terminating KafkaSparkStructuredStreamingApp ...")
+    jsonToSourceTopic.awaitTermination(3000L)
+    sourceTopicToSinkTopic.awaitTermination(3000L)
     consoleQuery.awaitTermination(6000L)
+    ()
   }
 }

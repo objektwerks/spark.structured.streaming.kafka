@@ -6,7 +6,7 @@ import org.scalatest.{BeforeAndAfterAll, FunSuite}
 import SparkInstance._
 import KeyValue._
 
-class KafkaSparkStructuredStreamingTest extends FunSuite with BeforeAndAfterAll {
+class StreamingTest extends FunSuite with BeforeAndAfterAll {
   val (kafkaBootstrapServers, urls) = ("kafka.bootstrap.servers", "localhost:9092")
   val sourceTopic = "source-topic"
   val sinkTopic = "sink-topic"
