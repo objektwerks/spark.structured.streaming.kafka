@@ -1,9 +1,8 @@
 package streaming
 
 import org.apache.spark.sql.streaming.OutputMode
-
-import SparkInstance._
-import KeyValue._
+import streaming.KeyValue.keyValueStructType
+import streaming.SparkInstance.sparkSession
 
 object StreamingApp extends App {
   val (kafkaBootstrapServers, urls) = ("kafka.bootstrap.servers", "localhost:9092")
@@ -51,11 +50,7 @@ object StreamingApp extends App {
     .option("checkpointLocation", "./target/sink-topic")
     .start
 
-  sys.addShutdownHook {
-    println("Terminating KafkaSparkStructuredStreamingApp ...")
-    jsonToSourceTopic.awaitTermination(3000L)
-    sourceTopicToSinkTopic.awaitTermination(3000L)
-    consoleQuery.awaitTermination(6000L)
-    ()
-  }
+  jsonToSourceTopic.awaitTermination(6000L)
+  sourceTopicToSinkTopic.awaitTermination(6000L)
+  consoleQuery.awaitTermination(3000L)
 }
