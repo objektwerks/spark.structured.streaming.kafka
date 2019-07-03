@@ -4,13 +4,13 @@ Kafka Spark Structured Streaming
 
 Homebrew
 --------
->Install Homebrew on OSX. [How-To] (http://coolestguidesontheplanet.com/installing-homebrew-os-x-yosemite-10-10-package-manager-unix-apps/)
+>Install Homebrew on OSX.
 
 Installation
 ------------
 >Install the following packages via Homebrew:
 
-1. brew tap homebrew/services [Homebrew Services] (https://robots.thoughtbot.com/starting-and-stopping-background-services-with-homebrew)
+1. brew tap homebrew/services
 2. brew install scala
 3. brew install sbt
 4. brew install zookeeper
@@ -38,6 +38,12 @@ Run
 
 Kafka
 -----
+>Topics 1) source-topic and 2) sink-topic
+
 * kafka-topics --zookeeper localhost:2181 --list
+* kafka-topics --zookeeper localhost:2181 --describe --topic source-topic
+* kafka-run-class kafka.tools.GetOffsetShell --broker-list localhost:9092 --topic source-topic --time -1
+* kafka-consumer-groups --bootstrap-server localhost:9092 --group objektwerks-group --describe
 * kafka-topics --zookeeper localhost:2181 --delete --topic source-topic
-* kafka-run-class kafka.tools.GetOffsetShell --broker-list localhost:9092 --topic source-topic
+* kafka-consumer-groups --bootstrap-server localhost:9092 --list
+* kafka-consumer-groups --bootstrap-server localhost:9092 --describe --group objektwerks-group
