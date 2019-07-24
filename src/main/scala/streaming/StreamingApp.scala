@@ -1,18 +1,30 @@
 package streaming
 
+import java.net.InetAddress
+
 import com.typesafe.config.ConfigFactory
+import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.streaming.OutputMode
 import org.apache.spark.sql.types.{StringType, StructType}
-import streaming.SparkInstance.sparkSession
 
 object StreamingApp extends App {
   val conf = ConfigFactory.load("streaming.conf").getConfig("streaming")
-  val keyValueStructType = new StructType()
-    .add(name = "key", dataType = StringType, nullable = false)
-    .add(name = "value", dataType = StringType, nullable = false)
   val (kafkaBootstrapServers, urls) = ("kafka.bootstrap.servers", conf.getString("kafka-bootstrap-servers"))
   val sourceTopic = conf.getString("source-topic")
   val sinkTopic = conf.getString("sink-topic")
+
+  val keyValueStructType = new StructType()
+    .add(name = "key", dataType = StringType, nullable = false)
+    .add(name = "value", dataType = StringType, nullable = false)
+
+  val sparkSession = SparkSession.builder.master("local[*]").appName(InetAddress.getLocalHost.getHostName).getOrCreate()
+  println("Initialized Spark instance.")
+
+  sys.addShutdownHook {
+    sparkSession.stop()
+    println("Terminated Spark instance.")
+  }
+
   val consoleQuery = sparkSession
     .readStream
     .format("kafka")
