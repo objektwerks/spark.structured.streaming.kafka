@@ -35,7 +35,7 @@ Run
 UI
 --
 1. SparkUI : localhost:4040
-2. History Server UI : localhost:18080
+2. History Server UI : localhost:18080 : start-history-server.sh | stop-history-server.sh
 
 Stop
 ----
