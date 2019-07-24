@@ -28,13 +28,14 @@ Service
 1. brew services stop kafka
 2. brew services stop zookeeper
 
-Test
-----
-1. sbt clean test
-
 Run
 ---
-1. sbt clean compile run **or** sbt run
+1. sbt clean compile run
+
+UI
+--
+1. SparkUI : localhost:4040
+2. History Server UI : localhost:18080
 
 Kafka
 -----
