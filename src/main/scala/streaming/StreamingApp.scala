@@ -17,12 +17,17 @@ object StreamingApp extends App {
     .add(name = "key", dataType = StringType, nullable = false)
     .add(name = "value", dataType = StringType, nullable = false)
 
-  val sparkSession = SparkSession.builder.master("local[*]").appName(InetAddress.getLocalHost.getHostName).getOrCreate()
-  println("Initialized Spark instance.")
+  val sparkSession = SparkSession.builder
+    .master("local[*]")
+    .appName(InetAddress.getLocalHost.getHostName)
+    .config("spark.eventLog.enabled", true)
+    .config("spark.eventLog.dir", "/tmp/spark-events")
+    .getOrCreate()
+  println("Initialized Spark StreamingJob. Press Ctrl C to terminate.")
 
   sys.addShutdownHook {
     sparkSession.stop()
-    println("Terminated Spark instance.")
+    println("Terminated Spark StreamingJob.")
   }
 
   val consoleQuery = sparkSession
@@ -67,7 +72,7 @@ object StreamingApp extends App {
     .option("checkpointLocation", conf.getString("sink-topic-checkpoint-location"))
     .start
 
-  jsonToSourceTopic.awaitTermination(6000L)
-  sourceTopicToSinkTopic.awaitTermination(6000L)
-  consoleQuery.awaitTermination(3000L)
+  jsonToSourceTopic.awaitTermination()
+  sourceTopicToSinkTopic.awaitTermination()
+  consoleQuery.awaitTermination()
 }
