@@ -5,7 +5,7 @@ import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.streaming.OutputMode
 import org.apache.spark.sql.types.{StringType, StructType}
 
-object StreamingApp extends App {
+object KafkaStructuredStreamingApp extends App {
   val conf = ConfigFactory.load("app.conf").getConfig("app")
   val (kafkaBootstrapServers, urls) = ("kafka.bootstrap.servers", conf.getString("kafka-bootstrap-servers"))
   val sourceTopic = conf.getString("source-topic")
