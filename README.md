@@ -37,6 +37,18 @@ UI
 1. SparkUI : localhost:4040
 2. History Server UI : localhost:18080
 
+Stop
+----
+1. Control-C
+ 
+Log
+---
+1. ./target/app.log
+
+Events
+------
+1. /tmp/spark-events
+
 Kafka
 -----
 >Topics 1) source-topic and 2) sink-topic

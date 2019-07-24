@@ -1,14 +1,12 @@
 package streaming
 
-import java.net.InetAddress
-
 import com.typesafe.config.ConfigFactory
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.streaming.OutputMode
 import org.apache.spark.sql.types.{StringType, StructType}
 
 object StreamingApp extends App {
-  val conf = ConfigFactory.load("streaming.conf").getConfig("streaming")
+  val conf = ConfigFactory.load("app.conf").getConfig("app")
   val (kafkaBootstrapServers, urls) = ("kafka.bootstrap.servers", conf.getString("kafka-bootstrap-servers"))
   val sourceTopic = conf.getString("source-topic")
   val sinkTopic = conf.getString("sink-topic")
@@ -18,8 +16,8 @@ object StreamingApp extends App {
     .add(name = "value", dataType = StringType, nullable = false)
 
   val sparkSession = SparkSession.builder
-    .master("local[*]")
-    .appName(InetAddress.getLocalHost.getHostName)
+    .master(conf.getString("master"))
+    .appName(conf.getString("name"))
     .config("spark.eventLog.enabled", true)
     .config("spark.eventLog.dir", "/tmp/spark-events")
     .getOrCreate()
