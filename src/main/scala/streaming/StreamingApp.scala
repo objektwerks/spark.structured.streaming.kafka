@@ -24,7 +24,7 @@ object StreamingApp extends App {
   println("Initialized Spark StreamingJob. Press Ctrl C to terminate.")
 
   sys.addShutdownHook {
-    sparkSession.stop()
+    sparkSession.stop
     println("Terminated Spark StreamingJob.")
   }
 
@@ -70,7 +70,7 @@ object StreamingApp extends App {
     .option("checkpointLocation", conf.getString("sink-topic-checkpoint-location"))
     .start
 
-  jsonToSourceTopic.awaitTermination()
-  sourceTopicToSinkTopic.awaitTermination()
-  consoleQuery.awaitTermination()
+  jsonToSourceTopic.awaitTermination
+  sourceTopicToSinkTopic.awaitTermination
+  consoleQuery.awaitTermination
 }
