@@ -18,8 +18,8 @@ object KafkaStructuredStreamingApp extends App {
   val sparkSession = SparkSession.builder
     .master(conf.getString("master"))
     .appName(conf.getString("name"))
-    .config("spark.eventLog.enabled", true)
-    .config("spark.eventLog.dir", "/tmp/spark-events")
+    .config("spark.eventLog.enabled", conf.getBoolean("spark.eventLog.enabled"))
+    .config("spark.eventLog.dir", conf.getString("spark.eventLog.dir"))
     .getOrCreate()
   println("Initialized Spark StreamingJob. Press Ctrl C to terminate.")
 
