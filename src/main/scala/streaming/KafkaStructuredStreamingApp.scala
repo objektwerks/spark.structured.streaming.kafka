@@ -21,11 +21,11 @@ object KafkaStructuredStreamingApp extends App {
     .config("spark.eventLog.enabled", conf.getBoolean("spark.eventLog.enabled"))
     .config("spark.eventLog.dir", conf.getString("spark.eventLog.dir"))
     .getOrCreate()
-  println("Initialized Spark StreamingJob. Press Ctrl C to terminate.")
+  println("Initialized Spark KafkaStructuredStreamingApp. Press Ctrl C to terminate.")
 
   sys.addShutdownHook {
     sparkSession.stop
-    println("Terminated Spark StreamingJob.")
+    println("Terminated Spark KafkaStructuredStreamingApp.")
   }
 
   val consoleQuery = sparkSession
