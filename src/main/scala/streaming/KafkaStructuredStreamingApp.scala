@@ -70,7 +70,7 @@ object KafkaStructuredStreamingApp extends App {
     .option("checkpointLocation", conf.getString("sink-topic-checkpoint-location"))
     .start
 
+  consoleQuery.awaitTermination
   jsonToSourceTopic.awaitTermination
   sourceTopicToSinkTopic.awaitTermination
-  consoleQuery.awaitTermination
 }
