@@ -1,6 +1,6 @@
 Kafka Spark Structured Streaming
 --------------------------------
->The purpose of this project is to test Kafka with Spark Structured Streaming.
+>The purpose of this project is to test Kafka with Spark Structured Streaming
 
 Homebrew
 --------
