@@ -11,10 +11,8 @@ Installation
 >Install the following packages via Homebrew:
 
 1. brew tap homebrew/services
-2. brew install scala
-3. brew install sbt
-4. brew install zookeeper
-5. brew install kafka
+2. brew install zookeeper
+3. brew install kafka
 
 Service
 -------
