@@ -11,6 +11,10 @@ object KafkaStructuredStreamingApp extends App {
   val sourceTopic = conf.getString("source-topic")
   val sinkTopic = conf.getString("sink-topic")
 
+  val sparkEventLogDir = conf.getString("spark.eventLog.dir")
+  val sparkEventDirCreated = createSparkEventsDir(sparkEventLogDir)
+  println(s"*** $sparkEventLogDir exists or was created: $sparkEventDirCreated")
+
   val keyValueStructType = new StructType()
     .add(name = "key", dataType = StringType, nullable = false)
     .add(name = "value", dataType = StringType, nullable = false)
@@ -19,7 +23,7 @@ object KafkaStructuredStreamingApp extends App {
     .master(conf.getString("master"))
     .appName(conf.getString("name"))
     .config("spark.eventLog.enabled", conf.getBoolean("spark.eventLog.enabled"))
-    .config("spark.eventLog.dir", conf.getString("spark.eventLog.dir"))
+    .config("spark.eventLog.dir", sparkEventLogDir)
     .getOrCreate()
   println("Initialized Spark KafkaStructuredStreamingApp. Press Ctrl C to terminate.")
 

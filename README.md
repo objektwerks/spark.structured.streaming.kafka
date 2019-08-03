@@ -30,8 +30,7 @@ Service
 
 Run
 ---
-1. mkdir /tmp/spark-events { Only required once if nonexistent }
-2. sbt clean compile run
+1. sbt clean compile run
 
 UI
 --
