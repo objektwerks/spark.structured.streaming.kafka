@@ -1,9 +1,13 @@
 package streaming
 
+import java.nio.file.{Files, Paths}
+
 import com.typesafe.config.ConfigFactory
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.streaming.OutputMode
 import org.apache.spark.sql.types.{StringType, StructType}
+
+import scala.util.Try
 
 object KafkaStructuredStreamingApp {
   def main(args: Array[String]): Unit = {
@@ -12,8 +16,13 @@ object KafkaStructuredStreamingApp {
     val sourceTopic = conf.getString("source-topic")
     val sinkTopic = conf.getString("sink-topic")
 
+    def makeSparkEventLogDir(dir: String): Boolean = {
+      val path = Paths.get(dir)
+      if (!Files.exists(path)) Try ( Files.createDirectories(path) ).isSuccess else true
+    }
+
     val sparkEventLogDir = conf.getString("spark.eventLog.dir")
-    val sparkEventDirCreated = createSparkEventsDir(sparkEventLogDir)
+    val sparkEventDirCreated = makeSparkEventLogDir(sparkEventLogDir)
     println(s"*** $sparkEventLogDir exists or was created: $sparkEventDirCreated")
 
     val keyValueStructType = new StructType()
