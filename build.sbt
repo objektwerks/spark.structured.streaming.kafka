@@ -1,4 +1,4 @@
-name := "kafka.spark.structured.streaming"
+name := "spark.structured.streaming.kafka"
 organization := "objektwerks"
 version := "0.1"
 scalaVersion := "2.12.12"
