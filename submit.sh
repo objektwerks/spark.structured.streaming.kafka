@@ -2,5 +2,5 @@
 spark-submit \
   --class streaming.KafkaStructuredStreamingApp \
   --master local[2] \
-  --packages org.apache.spark:spark-sql-kafka-0-10_2.11:2.4.3,com.typesafe:config:1.3.4 \
-  ./target/scala-2.11/kafka-spark-structured-streaming_2.11-0.1.jar
+  --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.0.1,com.typesafe:config:1.4.0 \
+  ./target/scala-2.12/kafka-spark-structured-streaming_2.12-0.1-SNAPSHOT.jar
