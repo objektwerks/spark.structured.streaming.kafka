@@ -1,7 +1,7 @@
 name := "spark.structured.streaming.kafka"
 organization := "objektwerks"
 version := "0.1-SNAPSHOT"
-scalaVersion := "2.12.14"
+scalaVersion := "2.12.15"
 libraryDependencies ++= {
   val sparkVersion = "2.4.8"
   Seq(
