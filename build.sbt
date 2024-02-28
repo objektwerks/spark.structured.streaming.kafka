@@ -9,6 +9,6 @@ libraryDependencies ++= {
     "org.apache.spark" %% "spark-streaming" % sparkVersion,
     "org.apache.spark" %% "spark-sql" % sparkVersion,
     "org.apache.spark" %% "spark-sql-kafka-0-10" % "3.4.1",
-    "com.typesafe" % "config" % "1.4.2"
+    "com.typesafe" % "config" % "1.4.3"
   )
 }
